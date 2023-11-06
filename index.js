@@ -66,6 +66,7 @@ async function run() {
      
     })
 
+    // this api help us to get application feature data
     app.get('/api/v1/features', async(req,res)=>{
       const cursor = featureCollection.find();
       const result = await cursor.toArray();
