@@ -49,13 +49,14 @@ async function run() {
     const onlineGroupStudy = database.collection('users');
     const featureCollection = database.collection('feature');
 
+    // This api insert profile details in users collection
     app.post('/api/v1/users', async(req,res)=>{
         const doc = req.body;
         const result = await onlineGroupStudy.insertOne(doc)
         res.send(result);
     })
 
-    // user information get using query
+    // users information get using this api
     app.get('/api/v1/users', async(req,res)=>{
       const userEmail = req.query.email;
       const query = {email: userEmail};
