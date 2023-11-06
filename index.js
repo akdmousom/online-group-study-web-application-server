@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser')
 
 
 // Define here the app listening port here
@@ -19,6 +21,7 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 
 // All API
@@ -49,6 +52,17 @@ async function run() {
     const onlineGroupStudy = database.collection('users');
     const featureCollection = database.collection('feature');
 
+    // Create token for each user login
+    app.post('/api/v1/access-token', async(req,res)=>{
+      const userEmail = req.body;
+      const token = jwt.sign(userEmail,process.env.ACCESS_TOKEN,{ expiresIn: '1h' });
+      res
+      .cookie('token', token)
+      .send({operation: 'success'})
+    })
+    
+
+
     // This api insert profile details in users collection
     app.post('/api/v1/users', async(req,res)=>{
         const doc = req.body;
@@ -72,6 +86,9 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     })
+
+
+    
 
 
 
