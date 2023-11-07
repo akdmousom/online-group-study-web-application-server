@@ -176,6 +176,37 @@ async function run() {
       
     })
 
+    app.put('/api/v1/update-single-assignment', gateMan, async(req,res)=>{
+      const {id} = req.query;
+      const email = req.user.userEmail
+      const {title, description,thumbnail, marks, difficultyLevel,userEmail
+      } = req.body;
+      const filter = {_id: new ObjectId(id)}
+
+      if (email !== userEmail) {
+
+        res.status(401).send('You are not authorized')
+        
+      }
+
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          title: title,
+          description: description,
+          thumbnail: thumbnail,
+          marks: marks,
+          difficultyLevel:difficultyLevel,
+
+
+        },
+      };
+
+      const result = await assignmentCollection.updateOne(filter,updateDoc,options)
+      res.send(result)
+
+
+    })
 
 
 
