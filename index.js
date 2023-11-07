@@ -157,10 +157,6 @@ async function run() {
       const filter = {_id: new ObjectId(id)}
       const cursor = await assignmentCollection.findOne(filter)
       // console.log(cursor.userEmail);
-
-
-
-
       if (cursor?.userEmail === user.userEmail) {
       const result = assignmentCollection.deleteOne(filter)
       return res.send(result)
@@ -169,7 +165,14 @@ async function run() {
 
       res.status(401).send({message: 'Unauthorized'})
 
-      
+    })
+
+    app.get('/api/v1/single-assignment/:id', gateMan, async(req,res)=>{
+      const {id }= req.params;
+      const query = {_id: new ObjectId(id)}
+      const cursor = assignmentCollection.findOne(query)
+      const result = await cursor
+      res.send(result)
       
     })
 
