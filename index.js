@@ -52,6 +52,7 @@ async function run() {
     const onlineGroupStudy = database.collection('users');
     const featureCollection = database.collection('feature');
     const assignmentCollection = database.collection('assignments');
+    const panddingAssignmentCollection = database.collection('panddingAssignment');
 
     // Verify token 
 
@@ -208,6 +209,21 @@ async function run() {
 
 
     })
+
+    app.post('/api/v1/take-assignment', gateMan, async (req,res)=>{
+      const doc = req.body
+      const cursor = panddingAssignmentCollection.insertOne(doc)
+      res.send(cursor)
+  })
+
+  app.get('/api/v1/padding-assignment', gateMan, async (req,res)=>{
+   
+    const {pandding} = req.query
+    const query = {status: pandding }
+    const cursor = panddingAssignmentCollection.find(query)
+    const result = await cursor.toArray()
+    res.send(result)
+})
 
 
 
