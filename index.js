@@ -183,27 +183,28 @@ async function run() {
       } = req.body;
       const filter = {_id: new ObjectId(id)}
 
-      if (email !== userEmail) {
+      if (email === userEmail) {
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: {
+            title: title,
+            description: description,
+            thumbnail: thumbnail,
+            marks: marks,
+            difficultyLevel:difficultyLevel,
+  
+  
+          },
+        };
+  
+        const result = await assignmentCollection.updateOne(filter,updateDoc,options)
+        return res.send(result)
 
-        res.status(401).send('You are not authorized')
+       
         
       }
-
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: {
-          title: title,
-          description: description,
-          thumbnail: thumbnail,
-          marks: marks,
-          difficultyLevel:difficultyLevel,
-
-
-        },
-      };
-
-      const result = await assignmentCollection.updateOne(filter,updateDoc,options)
-      res.send(result)
+      res.status(401).send('You are not authorized')
+     
 
 
     })
