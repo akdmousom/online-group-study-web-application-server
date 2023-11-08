@@ -217,13 +217,23 @@ async function run() {
   })
 
   app.get('/api/v1/padding-assignment', gateMan, async (req,res)=>{
-   
+   let query = {}
     const {pandding} = req.query
-    const query = {status: pandding }
+    const {emailField} = req.query
+    if (pandding) {
+
+      query = {status: pandding }
+      
+    }
+
+    if (emailField) {
+
+      query = {email: emailField }
+      
+    }
     const cursor = panddingAssignmentCollection.find(query)
     const result = await cursor.toArray()
     res.send(result)
-    console.log(pandding);
 })
 
 app.put('/api/v1/update-padding-assignment', gateMan, async(req,res)=>{
