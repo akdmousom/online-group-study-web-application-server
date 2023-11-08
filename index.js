@@ -223,7 +223,29 @@ async function run() {
     const cursor = panddingAssignmentCollection.find(query)
     const result = await cursor.toArray()
     res.send(result)
+    console.log(pandding);
 })
+
+app.put('/api/v1/update-padding-assignment', gateMan, async(req,res)=>{
+  const {id} = req.query;
+  const {status, mark, feedback} = req.body;
+
+    const filter = {_id: new ObjectId(id)}
+    const options = { upsert: true };
+    const updateDoc = {
+      $set: {
+        status: status,
+        mark: mark,
+        feedback: feedback,
+
+      },
+    };
+
+    const result = await panddingAssignmentCollection.updateOne(filter,updateDoc,options)
+    return res.send(result)
+
+  })
+
 
 
 
