@@ -134,11 +134,17 @@ async function run() {
     })
 
     app.get('/api/v1/get-assignments', async(req,res)=>{
-      
+      let query = {}
 
       const {difficultyField} = req.query;
 
-      let query = {}
+      const page =  Number(req.query.page)
+      const limit = Number(req.query.limit)
+
+      const skip = (page-1)*limit
+
+     
+
 
       if (difficultyField) {
 
@@ -146,9 +152,10 @@ async function run() {
         
       }
     
-      const cursor = assignmentCollection.find(query)
+      const cursor = assignmentCollection.find(query).skip(skip).limit(limit)
       const result = await cursor.toArray()
-      res.send(result)
+      const total = await assignmentCollection.countDocuments() 
+      res.send({result, total})
     })
 
     app.delete('/api/v1/delete-assignment', gateMan, async (req,res)=>{
@@ -272,6 +279,8 @@ app.put('/api/v1/update-padding-assignment', gateMan, async(req,res)=>{
       return res.send(result)
   
     })
+
+    
 
 
 
