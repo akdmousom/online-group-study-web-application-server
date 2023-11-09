@@ -256,6 +256,23 @@ app.put('/api/v1/update-padding-assignment', gateMan, async(req,res)=>{
 
   })
 
+  app.put('/api/v1/recheck-assignment', gateMan, async(req,res)=>{
+    const {id} = req.query;
+    const {status} = req.body;
+  
+      const filter = {_id: new ObjectId(id)}
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: 'Padding',
+        },
+      };
+  
+      const result = await panddingAssignmentCollection.updateOne(filter,updateDoc,options)
+      return res.send(result)
+  
+    })
+
 
 
 
